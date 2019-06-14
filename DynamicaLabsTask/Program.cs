@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace DynamicaLabsTask
 {
@@ -12,20 +9,27 @@ namespace DynamicaLabsTask
     {
         static void Main(string[] args)
         {
-            ExtractCsvFiles();
+            Console.Write("Insert zip archive path here: ");
+            string pathToZip = Console.ReadLine();
+            ExtractCsvFiles(pathToZip);
         }
 
-        public static void ExtractCsvFiles()
+        public static void ExtractCsvFiles(string pathToZip) // method A
         {
-            //Console.Write("Insert zip archive path here: ");
-            //string pathToZip = Console.ReadLine();
-            //Console.WriteLine("Provide path where to extract the zip file: ");
-            //string extractPath = Console.ReadLine();
-            string pathToZip = @"C:\Users\Dmitriy\Desktop\DynamicaLabsTask.zip";
-            string extractPath = @"C:\Users\Dmitriy\Desktop\test";
-            extractPath = Path.GetFullPath(extractPath);
-            if (!extractPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-                extractPath += Path.DirectorySeparatorChar;
+            string tempFolderPath = Path.GetDirectoryName(pathToZip);
+            tempFolderPath = Path.Combine(tempFolderPath) + @"\tempZipFolder";
+
+            if (!Directory.Exists(tempFolderPath))
+            {
+                DirectoryInfo tempDirectory = Directory.CreateDirectory(tempFolderPath);
+                Console.WriteLine("Temp directory created!");
+            }
+
+            tempFolderPath = Path.GetFullPath(tempFolderPath);
+            Console.WriteLine(tempFolderPath);
+
+            if (!tempFolderPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                tempFolderPath += Path.DirectorySeparatorChar;
 
             using (ZipArchive archive = ZipFile.OpenRead(pathToZip))
             {
@@ -33,12 +37,31 @@ namespace DynamicaLabsTask
                 {
                     if (entry.FullName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
                     {
-                        string destinationPath = Path.GetFullPath(Path.Combine(extractPath, entry.FullName));
-                        if (destinationPath.StartsWith(extractPath, StringComparison.Ordinal))
+                        string destinationPath = Path.GetFullPath(Path.Combine(tempFolderPath, entry.FullName));
+                        if (destinationPath.StartsWith(tempFolderPath, StringComparison.Ordinal))
                             entry.ExtractToFile(destinationPath);
                     }
                 }
             }
+
+            Console.WriteLine("CSV files extracted!");
+
+            DirectoryInfo tempFolder = new DirectoryInfo(tempFolderPath);
+            foreach (var item in tempFolder.GetFiles("*.csv"))
+            {
+                EmptyMethod(item);
+            }
+
+            Thread.Sleep(2000); // wait for some visual 
+
+            Directory.Delete(tempFolderPath, true);
+
+            Console.WriteLine("Temp folder deleted!");
+        }
+
+        public static void EmptyMethod(FileInfo info) // method B
+        {
+            Console.WriteLine(info.FullName);
         }
     }
 }
