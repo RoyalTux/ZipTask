@@ -19,14 +19,15 @@ namespace DynamicaLabsTask
             }
 
             tempFolderPath = Path.GetFullPath(tempFolderPath);
-            Console.WriteLine(tempFolderPath);
-
             if (!tempFolderPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
                 tempFolderPath += Path.DirectorySeparatorChar;
+            Console.WriteLine("Temp path: ", tempFolderPath);
+
             try
             {
                 using (ZipArchive archive = ZipFile.OpenRead(pathToZip))
                 {
+                    int i = 1;
                     foreach (ZipArchiveEntry entry in archive.Entries)
                     {
                         if (entry.FullName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
@@ -34,9 +35,10 @@ namespace DynamicaLabsTask
                             string destinationPath = Path.GetFullPath(Path.Combine(tempFolderPath, entry.FullName));
                             if (destinationPath.StartsWith(tempFolderPath, StringComparison.Ordinal))
                                 entry.ExtractToFile(destinationPath);
+                            Console.WriteLine(i + " CSV file extracted!");
+                            i++;
                         }
                     }
-                    Console.WriteLine("CSV files extracted!");
                 }
             }
             catch (Exception ex)
@@ -50,11 +52,11 @@ namespace DynamicaLabsTask
                 EmptyMethod(item);
             }
 
-            Thread.Sleep(2000); // wait for some visual 
+            Thread.Sleep(2000); // wait 
 
             Directory.Delete(tempFolderPath, true);
 
-            Console.WriteLine("Temp folder deleted!");
+            Console.WriteLine("Temp folder with files deleted!");
         }
 
         public static void EmptyMethod(FileInfo info) // method B
