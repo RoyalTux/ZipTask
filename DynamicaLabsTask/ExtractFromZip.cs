@@ -42,9 +42,9 @@ namespace DynamicaLabsTask
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
+                throw new Exception();
             }
 
             DirectoryInfo tempFolder = new DirectoryInfo(tempFolderPath);
@@ -73,10 +73,7 @@ namespace DynamicaLabsTask
             {
                 throw new FileNotFoundException();
             }
-            else
-            {
-                ExtractCsvFiles(pathToZip);
-            }
+            ExtractCsvFiles(pathToZip);
         }
     }
 }

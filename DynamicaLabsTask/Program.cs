@@ -7,7 +7,8 @@ namespace DynamicaLabsTask
     {
         static void Main(string[] args)
         {
-            Start: try
+            Start:
+            try
             {
                 ExtractFromZip extractFromZip = new ExtractFromZip();
                 extractFromZip.StartExtract();
@@ -16,6 +17,10 @@ namespace DynamicaLabsTask
             {
                 Console.WriteLine("Path not found!");
                 goto Start;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
             }
         }
     }
