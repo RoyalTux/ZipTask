@@ -2,13 +2,14 @@
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
+using Console = System.Console;
 
 namespace DynamicaLabsTask
 {
     class ExtractFromZip
     {
         public void ExtractCsvFiles(string pathToZip) // method A
-        {
+        {             
             string tempFolderPath = Path.GetDirectoryName(pathToZip);
             tempFolderPath = Path.Combine(tempFolderPath) + @"\tempZipFolder";
 
@@ -62,6 +63,20 @@ namespace DynamicaLabsTask
         public static void EmptyMethod(FileInfo info) // method B
         {
             Console.WriteLine(info.FullName);
+        }
+
+        public void StartExtract()
+        {
+            Console.Write("Insert zip archive path here: ");
+            string pathToZip = Console.ReadLine();
+            if (!File.Exists(pathToZip))
+            {
+                throw new FileNotFoundException();
+            }
+            else
+            {
+                ExtractCsvFiles(pathToZip);
+            }
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Compression;
-using System.Threading;
 
 namespace DynamicaLabsTask
 {
@@ -9,10 +7,16 @@ namespace DynamicaLabsTask
     {
         static void Main(string[] args)
         {
-            Console.Write("Insert zip archive path here: ");
-            string pathToZip = Console.ReadLine();
-            ExtractFromZip extractFromZip = new ExtractFromZip();
-            extractFromZip.ExtractCsvFiles(pathToZip);
+            Start: try
+            {
+                ExtractFromZip extractFromZip = new ExtractFromZip();
+                extractFromZip.StartExtract();
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("Path not found!");
+                goto Start;
+            }
         }
     }
 }
