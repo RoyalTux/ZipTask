@@ -11,7 +11,7 @@ namespace DynamicaLabsTask
         public void ExtractCsvFiles(string pathToZip) // method A
         {             
             string tempFolderPath = Path.GetDirectoryName(pathToZip);
-            tempFolderPath = Path.Combine(tempFolderPath) + @"\tempZipFolder";
+            tempFolderPath = Path.Combine(tempFolderPath, "tempZipFolder");
 
             if (!Directory.Exists(tempFolderPath))
             {
@@ -24,8 +24,6 @@ namespace DynamicaLabsTask
                 tempFolderPath += Path.DirectorySeparatorChar;
             Console.WriteLine("Temp path: ", tempFolderPath);
 
-            try
-            {
                 using (ZipArchive archive = ZipFile.OpenRead(pathToZip))
                 {
                     int i = 1;
@@ -41,11 +39,6 @@ namespace DynamicaLabsTask
                         }
                     }
                 }
-            }
-            catch (Exception)
-            {
-                throw new Exception();
-            }
 
             DirectoryInfo tempFolder = new DirectoryInfo(tempFolderPath);
             foreach (var item in tempFolder.GetFiles("*.csv"))
